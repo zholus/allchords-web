@@ -1,0 +1,6 @@
+.idea
+.env.local
+src/.preload.php
+var
+vendor
+public/bundles
