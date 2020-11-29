@@ -27,7 +27,7 @@ final class SymfonyHttpClient implements HttpClient
     {
         $url = $this->addHost($uri);
 
-        return new SymfonyHttpResponseAdapter($this->httpClient->request('POST', $url));
+        return new SymfonyHttpResponseAdapter($this->httpClient->request('POST', $url, $options));
     }
 
     private function addHost(string $uri): string

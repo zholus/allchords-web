@@ -3,20 +3,34 @@ declare(strict_types=1);
 
 namespace App\Accounts\Service;
 
-final class DirectCallUsersService implements UsersService
+use App\Http\HttpClient;
+
+final class HttpUsersService implements UsersService
 {
     private AuthService $authService;
+    private HttpClient $httpClient;
 
     public function __construct(
+        HttpClient $httpClient,
         AuthService $authService
     ) {
         $this->authService = $authService;
-        $this->usersContract = $usersContract;
+        $this->httpClient = $httpClient;
     }
 
     public function registerUser(string $username, string $email, string $password): void
     {
-        $this->usersContract->registerUser($username, $email, $password);
+        $response = $this->httpClient->post('/api/accounts/auth/register', [
+            'body' => [
+                'username' => $username,
+                'email' => $email,
+                'password' => $password,
+            ],
+        ]);
+
+        if ($response->getStatusCode() >= 300) {
+            throw new \DomainException('Cannot register');
+        }
     }
 
     public function signInUser(string $email, string $password): void
