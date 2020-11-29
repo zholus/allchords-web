@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace App\Action;
 
-use App\Domain\SongsCatalog\Service\SongsService;
+use App\SongsCatalog\Service\SongsService;
+use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +19,7 @@ class HomePageAction extends AbstractController
 
     public function __invoke(): Response
     {
-        $songs = $this->songs->getSongsByCreatedDate(3, new \DateTimeImmutable());
+        $songs = $this->songs->getSongsByCreationDate(3, new DateTimeImmutable());
 
         return $this->render('home_page.twig', [
             'songs' => $songs

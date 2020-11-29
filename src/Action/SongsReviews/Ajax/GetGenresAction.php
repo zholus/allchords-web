@@ -12,12 +12,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class GetGenresAction extends Action
 {
-    private ReviewService $reviewService;
+    /*private ReviewService $reviewService;
 
     public function __construct(ReviewService $reviewService)
     {
         $this->reviewService = $reviewService;
-    }
+    }*/
 
     public function __invoke(Request $request): Response
     {

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Accounts\Service;
+namespace App\Accounts\Service;
 
-use App\Domain\Accounts\Permission;
-use App\Domain\Accounts\User;
-use App\Domain\Accounts\UserUnauthorizedException;
+use App\Accounts\Permission;
+use App\Accounts\User;
+use App\Accounts\UserUnauthorizedException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AuthService

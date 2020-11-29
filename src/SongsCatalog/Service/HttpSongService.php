@@ -1,34 +1,40 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\SongsCatalog\Service;
+namespace App\SongsCatalog\Service;
 
-use App\Domain\SongsCatalog\ViewModel\Song;
+use App\Http\HttpClient;
+use App\SongsCatalog\Model\Song;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 
-final class DirectCallSongService implements SongsService
+final class HttpSongService implements SongsService
 {
     private ViewModelMapper $viewModelMapper;
     private LoggerInterface $logger;
+    private HttpClient $httpClient;
 
     public function __construct(
+        HttpClient $httpClient,
         ViewModelMapper $viewModelMapper,
         LoggerInterface $logger
     ) {
         $this->viewModelMapper = $viewModelMapper;
         $this->logger = $logger;
+        $this->httpClient = $httpClient;
     }
 
     /**
      * @return Song[]
      */
-    public function getSongsByCreatedDate(int $limit, ?DateTimeImmutable $date): array
+    public function getSongsByCreationDate(int $limit, ?DateTimeImmutable $date): array
     {
         try {
-            $songsDto = $this->songContract->getSongsByCreatedDate($limit, $date);
+            $response = $this->httpClient->get('/api/songs-catalog/songs');
 
-            $songs = $songsDto->getSongs();
+            $songs = json_decode($response->getContent(), true);
+
+            $songs = $songs['songs'];
         } catch (\Throwable $exception) {
             $this->logger->error($exception->getMessage(), [
                 'exception' => $exception
@@ -40,15 +46,9 @@ final class DirectCallSongService implements SongsService
         $result = [];
 
         foreach ($songs as $song) {
-            $result[] = $this->viewModelMapper->mapSongsByCreatedDate($song);
+            $result[] = $this->viewModelMapper->mapSongs($song);
         }
 
         return $result;
-    }
-
-    public function sendToReview(string $title, array $artistsIds, array $genresIds, string $chords): void
-    {
-        $songsDto = $this->songContract->getSongsByCreatedDate($limit, $date);
-
     }
 }

@@ -10,6 +10,10 @@ services:
         exclude:
             - '../src/Kernel.php'
 
+    App\Http\SymfonyHttpClient:
+        arguments:
+            $apiHost: '%env(API_HOST)%'
+
     App\Action\:
         resource: '../src/Action/'
         tags: ['controller.service_arguments']

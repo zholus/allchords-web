@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Symfony\Middlewares;
+namespace App\Middlewares;
 
 use App\Domain\Accounts\Service\AuthService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Zholus\SymfonyMiddleware\MiddlewareInterface;
 
-final class CheckAuthMiddleware implements MiddlewareInterface
+final class CheckGuestMiddleware implements MiddlewareInterface
 {
     private AuthService $authService;
     private RouterInterface $router;
@@ -24,11 +24,11 @@ final class CheckAuthMiddleware implements MiddlewareInterface
     public function handle(Request $request): ?Response
     {
         if ($this->authService->isAuthenticated()) {
-            return null;
+            return new RedirectResponse(
+                $this->router->generate('home_page')
+            );
         }
 
-        return new RedirectResponse(
-            $this->router->generate('sign_in_page')
-        );
+        return null;
     }
 }

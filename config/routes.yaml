@@ -9,8 +9,8 @@ sign_in_page:
   controller: App\Action\Accounts\SignInPageAction
   options:
     middleware:
-      - 'App\Domain\Symfony\Middlewares\CheckGuestMiddleware'
-      - 'App\Domain\Symfony\Middlewares\PermissionMiddleware'
+      - 'App\Middlewares\CheckGuestMiddleware'
+      - 'App\Middlewares\PermissionMiddleware'
 
 sign_in:
   path: /sign-in
@@ -18,8 +18,8 @@ sign_in:
   controller: App\Action\Accounts\SignInAction
   options:
     middleware:
-      - 'App\Domain\Symfony\Middlewares\CheckGuestMiddleware'
-      - 'App\Domain\Symfony\Middlewares\PermissionMiddleware'
+      - 'App\Middlewares\CheckGuestMiddleware'
+      - 'App\Middlewares\PermissionMiddleware'
 
 register_page:
   path: /register
@@ -27,8 +27,8 @@ register_page:
   controller: App\Action\Accounts\RegisterPageAction
   options:
     middleware:
-      - 'App\Domain\Symfony\Middlewares\CheckGuestMiddleware'
-      - 'App\Domain\Symfony\Middlewares\PermissionMiddleware'
+      - 'App\Middlewares\CheckGuestMiddleware'
+      - 'App\Middlewares\PermissionMiddleware'
 
 register:
   path: /register
@@ -36,8 +36,8 @@ register:
   controller: App\Action\Accounts\RegisterAction
   options:
     middleware:
-      - 'App\Domain\Symfony\Middlewares\CheckGuestMiddleware'
-      - 'App\Domain\Symfony\Middlewares\PermissionMiddleware'
+      - 'App\Middlewares\CheckGuestMiddleware'
+      - 'App\Middlewares\PermissionMiddleware'
 
 logout:
   path: /logout
@@ -45,8 +45,8 @@ logout:
   controller: App\Action\Accounts\LogoutAction
   options:
     middleware:
-      - 'App\Domain\Symfony\Middlewares\CheckAuthMiddleware'
-      - 'App\Domain\Symfony\Middlewares\PermissionMiddleware'
+      - 'App\Middlewares\CheckAuthMiddleware'
+      - 'App\Middlewares\PermissionMiddleware'
 
 new_review_page:
   path: /songs/reviews/new
@@ -54,8 +54,8 @@ new_review_page:
   controller: App\Action\SongsReviews\NewReviewPageAction
   options:
     middleware:
-      - 'App\Domain\Symfony\Middlewares\CheckAuthMiddleware'
-      - 'App\Domain\Symfony\Middlewares\PermissionMiddleware'
+      - 'App\Middlewares\CheckAuthMiddleware'
+      - 'App\Middlewares\PermissionMiddleware'
 
 new_review:
   path: /songs/reviews/new
@@ -63,8 +63,8 @@ new_review:
   controller: App\Action\SongsReviews\NewReviewAction
   options:
     middleware:
-      - 'App\Domain\Symfony\Middlewares\CheckAuthMiddleware'
-      - 'App\Domain\Symfony\Middlewares\PermissionMiddleware'
+      - 'App\Middlewares\CheckAuthMiddleware'
+      - 'App\Middlewares\PermissionMiddleware'
 
 songs_reviews_artists_ajax:
   path: songs/reviews/ajax/artists
@@ -72,8 +72,8 @@ songs_reviews_artists_ajax:
   controller: App\Action\SongsReviews\Ajax\GetArtistsAction
   options:
     middleware:
-      - 'App\Domain\Symfony\Middlewares\CheckAuthMiddleware'
-      - 'App\Domain\Symfony\Middlewares\PermissionMiddleware'
+      - 'App\Middlewares\CheckAuthMiddleware'
+      - 'App\Middlewares\PermissionMiddleware'
 
 songs_reviews_genres_ajax:
   path: songs/reviews/ajax/genres
@@ -81,8 +81,8 @@ songs_reviews_genres_ajax:
   controller: App\Action\SongsReviews\Ajax\GetGenresAction
   options:
     middleware:
-      - 'App\Domain\Symfony\Middlewares\CheckAuthMiddleware'
-      - 'App\Domain\Symfony\Middlewares\PermissionMiddleware'
+      - 'App\Middlewares\CheckAuthMiddleware'
+      - 'App\Middlewares\PermissionMiddleware'
 
 review_songs:
   path: songs/reviews
@@ -90,5 +90,5 @@ review_songs:
   controller: App\Action\SongsReviews\GetSongsForReview
   options:
     middleware:
-      - 'App\Domain\Symfony\Middlewares\CheckAuthMiddleware'
-      - 'App\Domain\Symfony\Middlewares\PermissionMiddleware'
+      - 'App\Middlewares\CheckAuthMiddleware'
+      - 'App\Middlewares\PermissionMiddleware'

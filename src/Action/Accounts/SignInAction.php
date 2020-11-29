@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Action\Accounts;
 
 use App\Action\Action;
-use App\Domain\Accounts\Service\UsersService;
+use App\Accounts\Service\UsersService;
 use Assert\Assert;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

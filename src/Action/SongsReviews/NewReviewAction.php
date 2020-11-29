@@ -5,7 +5,7 @@ namespace App\Action\SongsReviews;
 
 #use App\Modules\SongsReviews\Application\Contracts\ReviewsContract;
 use App\Action\Action;
-use App\Domain\Accounts\Service\AuthService;
+use App\Accounts\Service\AuthService;
 use Symfony\Component\HttpFoundation\Request;
 
 class NewReviewAction extends Action
@@ -20,11 +20,11 @@ class NewReviewAction extends Action
     }
 
     public function __invoke(Request $request)
-    {
-        $title = $request->get('title');
-        $artistsIds = $request->get('artist_id');
-        $genresIds = $request->get('genre_id');
-        $chords = $request->get('chords');
+        {
+            $title = $request->get('title');
+            $artistsIds = $request->get('artist_id');
+            $genresIds = $request->get('genre_id');
+            $chords = $request->get('chords');
 
         try {
             Assert::lazy()

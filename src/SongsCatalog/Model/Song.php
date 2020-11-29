@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\SongsCatalog\ViewModel;
+namespace App\SongsCatalog\Model;
 
 use DateTimeImmutable;
 

@@ -1,4 +1,4 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
-        auth: '@App\Domain\Accounts\Service\AuthService'
+        auth: '@App\Accounts\Service\AuthService'

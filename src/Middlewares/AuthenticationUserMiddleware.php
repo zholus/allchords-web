@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Symfony\Middlewares;
+namespace App\Middlewares;
 
 use App\Domain\Accounts\Service\AuthService;
 use App\Domain\Accounts\Service\UsersService;
