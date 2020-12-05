@@ -35,14 +35,60 @@ final class HttpUsersService implements UsersService
 
     public function signInUser(string $email, string $password): void
     {
-        $this->usersContract->signInUser($email, $password);
+        $response = $this->httpClient->post('/api/accounts/auth/sign-in', [
+            'body' => [
+                'email' => $email,
+                'password' => $password,
+            ],
+        ]);
 
-        $token = $this->usersContract->getToken($email);
+        $responseData = json_decode($response->getContent(), true);
 
-        $user = $this->usersContract->getUserByToken($token);
-        $userPermission = $this->usersContract->getPermissions($user->getUserId());
+        if ($response->getStatusCode() >= 300) {
+            if ($response->getStatusCode() < 500) {
+                $errorMessage = $responseData['message'];
+            } else {
+                $errorMessage = 'Unexpected error!';
+            }
 
-        $this->authenticate($user, $userPermission);
+            throw new \DomainException($errorMessage);
+        }
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $accessToken = $responseData['access_token'];
+        $refreshToken = $responseData['refresh_token'];
+        $expireAt = $responseData['expire_at'];
+
+        $response = $this->httpClient->get('/api/accounts/users/authenticated', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken
+            ],
+        ]);
+
+        $responseData = json_decode($response->getContent(), true);
+
+        if ($response->getStatusCode() >= 300) {
+            if ($response->getStatusCode() < 500) {
+                $errorMessage = $responseData['message'];
+            } else {
+                $errorMessage = 'Unexpected error!';
+            }
+
+            throw new \DomainException($errorMessage);
+        }
+
+        $userData = $responseData['user'];
+
+        $this->authService->authenticate(
+            $userData['user_id'],
+            $userData['username'],
+            $userData['email'],
+            $accessToken,
+            $refreshToken,
+            new \DateTimeImmutable($expireAt),
+            []
+        );
     }
 
     public function generateNewToken(string $refreshToken): void
@@ -61,21 +107,5 @@ final class HttpUsersService implements UsersService
         $userPermission = $this->usersContract->getPermissions($user->getUserId());
 
         $this->authenticate($user, $userPermission);
-    }
-
-    private function authenticate(UserDto $user, array $userPermissions): void
-    {
-        $this->authService->authenticate(
-            $user->getUserId(),
-            $user->getUsername(),
-            $user->getEmail(),
-            $user->getAccessToken(),
-            $user->getRefreshToken(),
-            $user->getAccessTokenExpiryAt(),
-            array_map(
-                fn (UserPermissionDto $userPermissionDto) => $userPermissionDto->getName(),
-                $userPermissions
-            )
-        );
     }
 }

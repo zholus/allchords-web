@@ -5,6 +5,6 @@ namespace App\Http;
 
 interface HttpClient
 {
-    public function get(string $uri): Response;
-    public function post(string $uri, array $options): Response;
+    public function get(string $uri, array $options = []): Response;
+    public function post(string $uri, array $options = []): Response;
 }

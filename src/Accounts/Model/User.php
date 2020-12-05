@@ -1,40 +1,34 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Accounts;
+namespace App\Accounts\Model;
 
-use DateTimeImmutable;
+use App\Accounts\Permission;
 
 class User
 {
     private string $userId;
     private string $username;
     private string $email;
-    private string $token;
-    private string $refreshToken;
-    private DateTimeImmutable $expiryAt;
 
     /**
      * @var Permission[]
      */
     private array $permissions;
+    private Token $token;
 
     public function __construct(
         string $userId,
         string $username,
         string $email,
-        string $token,
-        string $refreshToken,
-        DateTimeImmutable $expiryAt,
-        array $permissions
+        array $permissions,
+        Token $token
     ) {
         $this->userId = $userId;
         $this->username = $username;
         $this->email = $email;
-        $this->token = $token;
-        $this->refreshToken = $refreshToken;
-        $this->expiryAt = $expiryAt;
         $this->permissions = $permissions;
+        $this->token = $token;
     }
 
     public function getUserId(): string
@@ -52,18 +46,8 @@ class User
         return $this->email;
     }
 
-    public function getToken(): string
+    public function getPermissions(): array
     {
-        return $this->token;
-    }
-
-    public function getRefreshToken(): string
-    {
-        return $this->refreshToken;
-    }
-
-    public function getExpiryAt(): DateTimeImmutable
-    {
-        return $this->expiryAt;
+        return $this->permissions;
     }
 }
