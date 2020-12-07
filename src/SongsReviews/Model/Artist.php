@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\SongsReviews\Service;
+namespace App\SongsReviews\Model;
 
-class ArtistDto
+class Artist
 {
     private string $id;
     private string $title;

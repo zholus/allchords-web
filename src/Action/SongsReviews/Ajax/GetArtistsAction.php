@@ -4,20 +4,20 @@ declare(strict_types=1);
 namespace App\Action\SongsReviews\Ajax;
 
 use App\Action\Action;
-use App\Domain\SongsReviews\Service\ArtistDto;
-use App\Domain\SongsReviews\Service\ReviewService;
+use App\SongsReviews\Model\Artist;
+use App\SongsReviews\Service\ReviewService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final class GetArtistsAction extends Action
 {
-    /*private ReviewService $reviewService;
+    private ReviewService $reviewService;
 
     public function __construct(ReviewService $reviewService)
     {
         $this->reviewService = $reviewService;
-    }*/
+    }
 
     public function __invoke(Request $request): Response
     {
@@ -28,7 +28,7 @@ final class GetArtistsAction extends Action
 
         return new JsonResponse([
             'data' => array_map(
-                fn(ArtistDto $artist) => ['id' => $artist->getId(), 'title' => $artist->getTitle()],
+                fn(Artist $artist) => ['id' => $artist->getId(), 'title' => $artist->getTitle()],
                 $artists
             ),
             'pagination' => [

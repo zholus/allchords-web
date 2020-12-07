@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\SongsReviews\Service;
+namespace App\SongsReviews\Service;
 
 interface ReviewService
 {
