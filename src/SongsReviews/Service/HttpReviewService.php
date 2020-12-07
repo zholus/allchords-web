@@ -8,6 +8,7 @@ use App\Http\HttpClient;
 use App\SongsReviews\Model\Artist;
 use App\SongsReviews\Model\Genre;
 use App\SongsReviews\Model\Pagination;
+use DomainException;
 
 final class HttpReviewService implements ReviewService
 {
@@ -80,5 +81,29 @@ final class HttpReviewService implements ReviewService
         );
 
         return [$genres, $pagination];
+    }
+
+    public function newReview(
+        string $creatorId,
+        array $artistsIds,
+        array $genresIds,
+        string $title,
+        string $chords
+    ): void {
+        $response = $this->httpClient->post('/api/songs-reviews/reviews', [
+            'body' => [
+                'title' => $title,
+                'artists_ids' => $artistsIds,
+                'genres_ids' => $genresIds,
+                'chords' => $chords,
+            ],
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->authService->getUser()->getToken()->getAccessToken()
+            ],
+        ]);
+
+        if ($response->getStatusCode() >= 300) {
+            throw new DomainException('Error during sending song to review');
+        }
     }
 }

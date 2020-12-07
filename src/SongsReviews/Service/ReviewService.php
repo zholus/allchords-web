@@ -7,4 +7,11 @@ interface ReviewService
 {
     public function getArtistsPaginated(?string $artistTitle, int $limit, int $page): array;
     public function getGenresPaginated(?string $genreTitle, int $limit, int $page): array;
+    public function newReview(
+        string $creatorId,
+        array $artistsIds,
+        array $genresIds,
+        string $title,
+        string $chords
+    ): void;
 }

@@ -3,28 +3,29 @@ declare(strict_types=1);
 
 namespace App\Action\SongsReviews;
 
-#use App\Modules\SongsReviews\Application\Contracts\ReviewsContract;
-use App\Action\Action;
 use App\Accounts\Service\AuthService;
+use App\Action\Action;
+use App\SongsReviews\Service\ReviewService;
+use Assert\Assert;
 use Symfony\Component\HttpFoundation\Request;
 
 class NewReviewAction extends Action
 {
-    private ReviewsContract $reviewsService;
     private AuthService $authService;
+    private ReviewService $reviewService;
 
-    public function __construct(AuthService $authService)
+    public function __construct(ReviewService $reviewService, AuthService $authService)
     {
-        $this->reviewsService = $reviewsService;
         $this->authService = $authService;
+        $this->reviewService = $reviewService;
     }
 
     public function __invoke(Request $request)
-        {
-            $title = $request->get('title');
-            $artistsIds = $request->get('artist_id');
-            $genresIds = $request->get('genre_id');
-            $chords = $request->get('chords');
+    {
+        $title = $request->get('title');
+        $artistsIds = $request->get('artist_id');
+        $genresIds = $request->get('genre_id');
+        $chords = $request->get('chords');
 
         try {
             Assert::lazy()
@@ -34,7 +35,7 @@ class NewReviewAction extends Action
                 ->that($chords, 'chords')->notEmpty()
                 ->verifyNow();
 
-            $this->reviewsService->newReview(
+            $this->reviewService->newReview(
                 $this->authService->getUser()->getUserId(),
                 $artistsIds,
                 $genresIds,
