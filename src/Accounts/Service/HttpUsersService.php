@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Accounts\Service;
 
+use App\Accounts\Model\Token;
 use App\Http\HttpClient;
+use DateTimeImmutable;
 
 final class HttpUsersService implements UsersService
 {
@@ -58,8 +60,56 @@ final class HttpUsersService implements UsersService
 
         $accessToken = $responseData['access_token'];
         $refreshToken = $responseData['refresh_token'];
-        $expireAt = $responseData['expire_at'];
+        $expireAt = new DateTimeImmutable($responseData['expire_at']);
 
+        $this->authenticate($accessToken, $refreshToken, $expireAt);
+    }
+
+    public function signInByRefreshToken(string $refreshToken): void
+    {
+        $responseData = $this->generateNewToken($refreshToken);
+
+        $accessToken = $responseData['access_token'];
+        $refreshToken = $responseData['refresh_token'];
+        $expireAt = new DateTimeImmutable($responseData['expire_at']);
+
+        $this->authenticate($accessToken, $refreshToken, $expireAt);
+    }
+
+    private function generateNewToken(string $refreshToken): array
+    {
+        $response = $this->httpClient->post('/api/accounts/auth/refresh-token', [
+            'body' => [
+                'refresh_token' => $refreshToken,
+            ],
+        ]);
+
+        $responseData = json_decode($response->getContent(), true);
+
+        if ($response->getStatusCode() >= 300) {
+            if ($response->getStatusCode() < 500) {
+                $errorMessage = $responseData['message'];
+            } else {
+                $errorMessage = 'Unexpected error!';
+            }
+
+            throw new \DomainException($errorMessage);
+        }
+
+        return json_decode($response->getContent(), true);
+    }
+
+    public function updateUserData(Token $token): void
+    {
+        $this->authenticate(
+            $token->getAccessToken(),
+            $token->getRefreshToken(),
+            $token->getAccessTokenExpiryAt()
+        );
+    }
+
+    private function authenticate(string $accessToken, string $refreshToken, DateTimeImmutable $expireAt)
+    {
         $response = $this->httpClient->get('/api/accounts/users/authenticated', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $accessToken
@@ -86,26 +136,8 @@ final class HttpUsersService implements UsersService
             $userData['email'],
             $accessToken,
             $refreshToken,
-            new \DateTimeImmutable($expireAt),
+            $expireAt,
             []
         );
-    }
-
-    public function generateNewToken(string $refreshToken): void
-    {
-        $this->usersContract->generateNewToken($refreshToken);
-    }
-
-    public function getTokenByEmail(string $email): string
-    {
-        return $this->usersContract->getToken($email);
-    }
-
-    public function signInUserByToken(string $token): void
-    {
-        $user = $this->usersContract->getUserByToken($token);
-        $userPermission = $this->usersContract->getPermissions($user->getUserId());
-
-        $this->authenticate($user, $userPermission);
     }
 }

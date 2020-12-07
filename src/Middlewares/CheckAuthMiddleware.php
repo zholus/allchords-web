@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Middlewares;
 
-use App\Domain\Accounts\Service\AuthService;
+use App\Accounts\Service\AuthService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

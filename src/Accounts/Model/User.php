@@ -50,4 +50,9 @@ class User
     {
         return $this->permissions;
     }
+
+    public function getToken(): Token
+    {
+        return $this->token;
+    }
 }

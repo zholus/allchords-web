@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Middlewares;
 
-use App\Domain\Accounts\Service\AuthService;
-use App\Domain\Accounts\Service\UsersService;
+use App\Accounts\Service\AuthService;
+use App\Accounts\Service\UsersService;
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -45,16 +45,13 @@ final class AuthenticationUserMiddleware implements GlobalMiddlewareInterface
 
         try {
             $user = $this->authService->getUser();
+            $token = $user->getToken();
 
-            if ($user->getExpiryAt() <= new DateTimeImmutable()) {
-                $this->usersService->generateNewToken($user->getRefreshToken());
-                $token = $this->usersService->getTokenByEmail($user->getEmail());
+            if ($token->getAccessTokenExpiryAt() <= new DateTimeImmutable()) {
+                $this->usersService->signInByRefreshToken($token->getRefreshToken());
             } else {
-                $token = $user->getToken();
+                $this->usersService->updateUserData($user->getToken());
             }
-
-
-            $this->usersService->signInUserByToken($token);
         } catch (Throwable $exception) {
             $this->logger->error('Error during authenticate user with token', [
                 'exception' => $exception
