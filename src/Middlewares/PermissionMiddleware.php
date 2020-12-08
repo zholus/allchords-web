@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Middlewares;
 
+use App\Accounts\PermissionsMap;
 use App\Accounts\Service\AuthService;
-use App\PermissionsMap;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Zholus\SymfonyMiddleware\MiddlewareInterface;
@@ -20,8 +20,6 @@ final class PermissionMiddleware implements MiddlewareInterface
 
     public function handle(Request $request): ?Response
     {
-        return null;
-
         $controllerFqcn = $request->attributes->get('_controller');
 
         $requiredPermissionsForAction = PermissionsMap::MAP[$controllerFqcn] ?? null;
@@ -30,9 +28,14 @@ final class PermissionMiddleware implements MiddlewareInterface
             return null;
         }
 
-        $user = $this->authService->getUser();
+        $userPermission = $this->authService->getUser()->getPermissions();
 
-        // todo: fetch permission
-        dd($requiredPermissionsForAction);
+        foreach ($userPermission as $permission) {
+            if (in_array($permission->getName(), $requiredPermissionsForAction, true)) {
+                return null;
+            }
+        }
+
+        return new Response('Access denied.', Response::HTTP_FORBIDDEN);
     }
 }
