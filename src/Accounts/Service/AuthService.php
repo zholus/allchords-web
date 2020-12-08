@@ -5,6 +5,7 @@ namespace App\Accounts\Service;
 
 use App\Accounts\Model\Token;
 use App\Accounts\Model\User;
+use App\Accounts\Permission;
 use App\Accounts\UserUnauthorizedException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -38,7 +39,10 @@ class AuthService
                 $userId,
                 $username,
                 $email,
-                $permissions,
+                array_map(
+                    fn(string $permission) => new Permission($permission),
+                    $permissions
+                ),
                 $token
             )
         );

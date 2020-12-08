@@ -130,6 +130,8 @@ final class HttpUsersService implements UsersService
 
         $userData = $responseData['user'];
 
+        $permissions = $this->getUserPermissions($accessToken);
+
         $this->authService->authenticate(
             $userData['user_id'],
             $userData['username'],
@@ -137,7 +139,20 @@ final class HttpUsersService implements UsersService
             $accessToken,
             $refreshToken,
             $expireAt,
-            []
+            $permissions
         );
+    }
+
+    private function getUserPermissions(string $accessToken): array
+    {
+        $response = $this->httpClient->get('/api/accounts/users/authenticated/permissions', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken
+            ],
+        ]);
+
+        $responseData = json_decode($response->getContent(), true);
+
+        return $responseData['permissions'];
     }
 }
