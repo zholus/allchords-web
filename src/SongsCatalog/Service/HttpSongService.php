@@ -30,7 +30,11 @@ final class HttpSongService implements SongsService
     public function getSongsByCreationDate(int $limit, ?DateTimeImmutable $date): array
     {
         try {
-            $response = $this->httpClient->get('/api/songs-catalog/songs');
+            $response = $this->httpClient->get('/api/songs-catalog/songs', [
+                'query' => [
+                    'creation_date' => $date->format('Y-m-d')
+                ]
+            ]);
 
             $songs = json_decode($response->getContent(), true);
 
